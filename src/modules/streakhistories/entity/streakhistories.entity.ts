@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../users/entity/users.entity";
 
 
@@ -10,13 +10,13 @@ export class StreakHistory {
     @Column({ type: "date" })
     date!: string;
 
-    @Column()
+    @Column({ type: 'boolean', default: true })
     streakContinue!: boolean;
 
-    @Column()
+    @Column({ type: 'int', default: 0 })
     completedActivities!: number;
 
-    @Column()
+    @Column({ type: 'int', default: 0 })
     pointsObtained!: number;
 
     @CreateDateColumn()
@@ -28,6 +28,10 @@ export class StreakHistory {
     @DeleteDateColumn()
     deletedAt!: Date;
 
-    @ManyToOne(() => User, user => user.streakHistory)
+    @Column({ type: 'uuid' })
+    userId!: string;
+
+    @ManyToOne(() => User, user => user.streakHistories)
+    @JoinColumn({ name: 'userId' })
     user!: User;
 }

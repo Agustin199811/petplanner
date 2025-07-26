@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../users/entity/users.entity";
 import { Reward } from "../../rewards/entity/rewards.entity";
 
@@ -7,8 +7,11 @@ export class UserReward {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    @Column({ type: "datetime" })
+    @Column({ type: 'timestamp', nullable: true })
     exchangeDate!: Date;
+
+    @Column({ type: 'boolean', default: false })
+    isUsed!: boolean;
 
     @CreateDateColumn()
     createdAt!: Date;
@@ -19,10 +22,18 @@ export class UserReward {
     @DeleteDateColumn()
     deletedAt!: Date;
 
-    @ManyToOne(() => User)
+    @Column({ type: 'uuid' })
+    userId!: string;
+
+    @Column({ type: 'uuid' })
+    rewardId!: string;
+
+    @ManyToOne(() => User, user => user.userRewards)
+    @JoinColumn({ name: 'userId' })
     user!: User;
 
-    @ManyToOne(() => Reward)
+    @ManyToOne(() => Reward, reward => reward.userRewards)
+    @JoinColumn({ name: 'rewardId' })
     reward!: Reward;
 
 }

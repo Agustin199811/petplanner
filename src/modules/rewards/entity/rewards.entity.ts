@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { RewardType } from "../enum/rewards.enum";
+import { UserReward } from "../../usersrewards/entity/usersrewards.entity";
 
 @Entity()
 export class Reward {
@@ -8,14 +10,20 @@ export class Reward {
     @Column()
     name!: string;
 
-    @Column({ type: "text" })
+    @Column({ type: 'text', nullable: true })
     description!: string;
+
+    @Column({
+        type: 'enum',
+        enum: RewardType
+    })
+    typeOfReward!: RewardType;
 
     @Column()
     necessaryPoints!: number;
 
-    @Column()
-    typeOfReward!: string;
+    @Column({ type: 'varchar', nullable: true })
+    icon!: string;
 
     @CreateDateColumn()
     createdAt!: Date;
@@ -26,4 +34,6 @@ export class Reward {
     @DeleteDateColumn()
     deletedAt!: Date;
 
+    @OneToMany(() => UserReward, userReward => userReward.reward)
+    userRewards!: UserReward[];
 }
